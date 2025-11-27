@@ -7,10 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        coral: '#FF6B6B',
-        violet: '#9B59B6',
-        teal: '#1ABC9C',
-        'off-white': '#FAF9F6',
+        'off-white': '#F3F4F6',
       },
     },
   },

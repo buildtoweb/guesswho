@@ -1,12 +1,5 @@
-import React, { useState, useMemo } from 'react'
-import { 
-  Users, 
-  X, 
-  RotateCcw, 
-  ArrowLeft, 
-  Info,
-  Sparkles
-} from 'lucide-react'
+import React, { useState, useMemo, useEffect } from "react";
+import { Users, X, RotateCcw, ArrowLeft, Info, Sparkles } from "lucide-react";
 
 // ============================================================================
 // INITIAL_DATA - Hier können die Charaktere einfach bearbeitet werden
@@ -18,207 +11,210 @@ const INITIAL_DATA = [
     name: "Alex",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
     category: ["Schulfreunde", "Fußballteam"],
-    traits: ["Hat eine Brille", "Mag Harry Potter", "Spielt Gitarre"]
+    traits: ["Hat eine Brille", "Mag Harry Potter", "Spielt Gitarre"],
   },
   {
     id: 2,
     name: "Sarah",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
     category: ["Schulfreunde", "Urlaub 2023"],
-    traits: ["Mag Kaffee", "Liest gerne", "Hat einen Hund"]
+    traits: ["Mag Kaffee", "Liest gerne", "Hat einen Hund"],
   },
   {
     id: 3,
     name: "Max",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Max",
     category: ["Fußballteam", "Urlaub 2023"],
-    traits: ["Spielt Fußball", "Mag Pizza", "Hat eine Schwester"]
+    traits: ["Spielt Fußball", "Mag Pizza", "Hat eine Schwester"],
   },
   {
     id: 4,
     name: "Emma",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emma",
     category: ["Schulfreunde"],
-    traits: ["Mag Yoga", "Isst vegetarisch", "Liebt Reisen"]
+    traits: ["Mag Yoga", "Isst vegetarisch", "Liebt Reisen"],
   },
   {
     id: 5,
     name: "Tom",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Tom",
     category: ["Fußballteam"],
-    traits: ["Hat eine Brille", "Mag Videospiele", "Spielt Klavier"]
+    traits: ["Hat eine Brille", "Mag Videospiele", "Spielt Klavier"],
   },
   {
     id: 6,
     name: "Lisa",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa",
     category: ["Schulfreunde", "Urlaub 2023"],
-    traits: ["Mag Kunst", "Hat einen Kater", "Läuft Marathon"]
+    traits: ["Mag Kunst", "Hat einen Kater", "Läuft Marathon"],
   },
   {
     id: 7,
     name: "Ben",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ben",
     category: ["Fußballteam"],
-    traits: ["Mag Technik", "Hat eine Brille", "Programmiert gerne"]
+    traits: ["Mag Technik", "Hat eine Brille", "Programmiert gerne"],
   },
   {
     id: 8,
     name: "Mia",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mia",
     category: ["Schulfreunde"],
-    traits: ["Mag Musik", "Spielt Geige", "Isst kein Fleisch"]
+    traits: ["Mag Musik", "Spielt Geige", "Isst kein Fleisch"],
   },
   {
     id: 9,
     name: "Noah",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Noah",
     category: ["Fußballteam", "Urlaub 2023"],
-    traits: ["Mag Filme", "Hat einen Bruder", "Mag Pizza"]
+    traits: ["Mag Filme", "Hat einen Bruder", "Mag Pizza"],
   },
   {
     id: 10,
     name: "Sophie",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie",
     category: ["Schulfreunde"],
-    traits: ["Mag Bücher", "Hat eine Brille", "Mag Kaffee"]
+    traits: ["Mag Bücher", "Hat eine Brille", "Mag Kaffee"],
   },
   {
     id: 11,
     name: "Lucas",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lucas",
     category: ["Fußballteam"],
-    traits: ["Spielt Fußball", "Mag Comics", "Hat einen Hund"]
+    traits: ["Spielt Fußball", "Mag Comics", "Hat einen Hund"],
   },
   {
     id: 12,
     name: "Hannah",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Hannah",
     category: ["Schulfreunde", "Urlaub 2023"],
-    traits: ["Mag Fotografie", "Isst vegetarisch", "Mag Yoga"]
+    traits: ["Mag Fotografie", "Isst vegetarisch", "Mag Yoga"],
   },
   {
     id: 13,
     name: "Finn",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Finn",
     category: ["Fußballteam"],
-    traits: ["Mag Sport", "Hat eine Schwester", "Mag Pizza"]
+    traits: ["Mag Sport", "Hat eine Schwester", "Mag Pizza"],
   },
   {
     id: 14,
     name: "Julia",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Julia",
     category: ["Schulfreunde"],
-    traits: ["Mag Kunst", "Spielt Klavier", "Mag Harry Potter"]
+    traits: ["Mag Kunst", "Spielt Klavier", "Mag Harry Potter"],
   },
   {
     id: 15,
     name: "Jonas",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jonas",
     category: ["Fußballteam", "Urlaub 2023"],
-    traits: ["Mag Technik", "Programmiert gerne", "Hat eine Brille"]
+    traits: ["Mag Technik", "Programmiert gerne", "Hat eine Brille"],
   },
   {
     id: 16,
     name: "Anna",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Anna",
     category: ["Schulfreunde"],
-    traits: ["Mag Musik", "Hat einen Kater", "Mag Reisen"]
+    traits: ["Mag Musik", "Hat einen Kater", "Mag Reisen"],
   },
   {
     id: 17,
     name: "David",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
     category: ["Fußballteam"],
-    traits: ["Spielt Fußball", "Mag Videospiele", "Hat einen Hund"]
+    traits: ["Spielt Fußball", "Mag Videospiele", "Hat einen Hund"],
   },
   {
     id: 18,
     name: "Laura",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Laura",
     category: ["Schulfreunde", "Urlaub 2023"],
-    traits: ["Mag Bücher", "Isst kein Fleisch", "Mag Yoga"]
+    traits: ["Mag Bücher", "Isst kein Fleisch", "Mag Yoga"],
   },
   {
     id: 19,
     name: "Felix",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
     category: ["Fußballteam"],
-    traits: ["Mag Filme", "Hat einen Bruder", "Mag Pizza"]
+    traits: ["Mag Filme", "Hat einen Bruder", "Mag Pizza"],
   },
   {
     id: 20,
     name: "Nina",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Nina",
     category: ["Schulfreunde"],
-    traits: ["Mag Fotografie", "Spielt Geige", "Mag Kaffee"]
+    traits: ["Mag Fotografie", "Spielt Geige", "Mag Kaffee"],
   },
   {
     id: 21,
     name: "Tim",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Tim",
     category: ["Fußballteam", "Urlaub 2023"],
-    traits: ["Mag Sport", "Hat eine Brille", "Mag Comics"]
+    traits: ["Mag Sport", "Hat eine Brille", "Mag Comics"],
   },
   {
     id: 22,
     name: "Lea",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lea",
     category: ["Schulfreunde"],
-    traits: ["Mag Kunst", "Hat einen Hund", "Mag Harry Potter"]
-  }
-]
+    traits: ["Mag Kunst", "Hat einen Hund", "Mag Harry Potter"],
+  },
+];
 
 // ============================================================================
 // Kategorien-Gruppierung (automatisch aus INITIAL_DATA generiert)
 // ============================================================================
 
 const getCategories = () => {
-  const categoryMap = {}
-  INITIAL_DATA.forEach(char => {
-    char.category.forEach(cat => {
+  const categoryMap = {};
+  INITIAL_DATA.forEach((char) => {
+    char.category.forEach((cat) => {
       if (!categoryMap[cat]) {
-        categoryMap[cat] = []
+        categoryMap[cat] = [];
       }
-      categoryMap[cat].push(char)
-    })
-  })
-  return categoryMap
-}
+      categoryMap[cat].push(char);
+    });
+  });
+  return categoryMap;
+};
 
 // ============================================================================
 // Confetti-Animation (einfache Simulation)
 // ============================================================================
 
 const triggerConfetti = () => {
-  const colors = ['#FF6B6B', '#9B59B6', '#1ABC9C', '#F39C12', '#3498DB']
-  const confettiCount = 50
-  
+  const colors = ["#FF6B6B", "#9B59B6", "#1ABC9C", "#F39C12", "#3498DB"];
+  const confettiCount = 50;
+
   for (let i = 0; i < confettiCount; i++) {
     setTimeout(() => {
-      const confetti = document.createElement('div')
-      confetti.style.position = 'fixed'
-      confetti.style.left = Math.random() * 100 + '%'
-      confetti.style.top = '-10px'
-      confetti.style.width = '10px'
-      confetti.style.height = '10px'
-      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]
-      confetti.style.borderRadius = '50%'
-      confetti.style.pointerEvents = 'none'
-      confetti.style.zIndex = '9999'
-      confetti.style.animation = `confetti-fall ${1 + Math.random() * 2}s linear forwards`
-      
-      document.body.appendChild(confetti)
-      
+      const confetti = document.createElement("div");
+      confetti.style.position = "fixed";
+      confetti.style.left = Math.random() * 100 + "%";
+      confetti.style.top = "-10px";
+      confetti.style.width = "10px";
+      confetti.style.height = "10px";
+      confetti.style.backgroundColor =
+        colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.borderRadius = "50%";
+      confetti.style.pointerEvents = "none";
+      confetti.style.zIndex = "9999";
+      confetti.style.animation = `confetti-fall ${
+        1 + Math.random() * 2
+      }s linear forwards`;
+
+      document.body.appendChild(confetti);
+
       setTimeout(() => {
-        confetti.remove()
-      }, 3000)
-    }, i * 20)
+        confetti.remove();
+      }, 3000);
+    }, i * 20);
   }
-}
+};
 
 // Confetti CSS Animation hinzufügen
-const style = document.createElement('style')
+const style = document.createElement("style");
 style.textContent = `
   @keyframes confetti-fall {
     to {
@@ -226,143 +222,282 @@ style.textContent = `
       opacity: 0;
     }
   }
-`
-document.head.appendChild(style)
+`;
+document.head.appendChild(style);
+
+// Formatierung des Timers (mm:ss)
+const formatTime = (seconds) => {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+};
 
 // ============================================================================
 // Haupt-App-Komponente
 // ============================================================================
 
 function App() {
-  // Screen States: 'start' | 'custom' | 'game'
-  const [currentScreen, setCurrentScreen] = useState('start')
-  const [selectedCharacters, setSelectedCharacters] = useState([])
-  const [eliminatedIds, setEliminatedIds] = useState(new Set())
-  const [selectedCharacterInfo, setSelectedCharacterInfo] = useState(null)
-  const [longPressTimer, setLongPressTimer] = useState(null)
+  // Screen States: 'welcome' | 'start' | 'custom' | 'game'
+  const [currentScreen, setCurrentScreen] = useState("welcome");
+  const [selectedCharacters, setSelectedCharacters] = useState([]);
+  const [eliminatedIds, setEliminatedIds] = useState(new Set());
+  const [selectedCharacterInfo, setSelectedCharacterInfo] = useState(null);
+  const [longPressTimer, setLongPressTimer] = useState(null);
+  const [previewCategoryName, setPreviewCategoryName] = useState(null);
+  const [previewCategoryChars, setPreviewCategoryChars] = useState([]);
+  const [gameSeconds, setGameSeconds] = useState(0);
+  const [winnerCharacter, setWinnerCharacter] = useState(null);
 
-  const categories = useMemo(() => getCategories(), [])
+  const categories = useMemo(() => getCategories(), []);
+
+  // Timer: läuft nur im Game-Screen
+  useEffect(() => {
+    let interval;
+
+    if (currentScreen === "game") {
+      setGameSeconds(0);
+      interval = setInterval(() => {
+        setGameSeconds((prev) => prev + 1);
+      }, 1000);
+    } else {
+      setGameSeconds(0);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [currentScreen]);
+
+  // Gewinner-Erkennung, sobald nur noch 1 Person übrig ist
+  useEffect(() => {
+    if (currentScreen !== "game" || selectedCharacters.length === 0) {
+      if (winnerCharacter) setWinnerCharacter(null);
+      return;
+    }
+
+    const remaining = selectedCharacters.filter(
+      (c) => !eliminatedIds.has(c.id)
+    );
+
+    if (remaining.length === 1) {
+      const last = remaining[0];
+      if (!winnerCharacter || winnerCharacter.id !== last.id) {
+        setWinnerCharacter(last);
+        triggerConfetti();
+      }
+    } else {
+      if (winnerCharacter) setWinnerCharacter(null);
+    }
+  }, [eliminatedIds, selectedCharacters, currentScreen, winnerCharacter]);
+
+  // Hilfsfunktion: Spiel mit bestimmter Charakterliste starten
+  const startGameWithCharacters = (chars) => {
+    setSelectedCharacters(chars);
+    setEliminatedIds(new Set());
+    setWinnerCharacter(null);
+    setCurrentScreen("game");
+  };
 
   // ==========================================================================
   // Screen: Start (Dashboard)
   // ==========================================================================
 
   const handleCategorySelect = (categoryName) => {
-    const categoryChars = categories[categoryName]
-    setSelectedCharacters(categoryChars)
-    setEliminatedIds(new Set())
-    setCurrentScreen('game')
-  }
+    const categoryChars = categories[categoryName];
+    setPreviewCategoryName(categoryName);
+    setPreviewCategoryChars(categoryChars);
+  };
 
   const handleCustomMode = () => {
-    setSelectedCharacters([])
-    setEliminatedIds(new Set())
-    setCurrentScreen('custom')
-  }
+    setSelectedCharacters([]);
+    setEliminatedIds(new Set());
+    setPreviewCategoryName(null);
+    setPreviewCategoryChars([]);
+    setCurrentScreen("custom");
+  };
 
   // ==========================================================================
   // Screen: Custom Mode (Auswahl)
   // ==========================================================================
 
   const toggleCharacterSelection = (char) => {
-    setSelectedCharacters(prev => {
-      const isSelected = prev.some(c => c.id === char.id)
+    setSelectedCharacters((prev) => {
+      const isSelected = prev.some((c) => c.id === char.id);
       if (isSelected) {
-        return prev.filter(c => c.id !== char.id)
+        return prev.filter((c) => c.id !== char.id);
       } else {
-        return [...prev, char]
+        return [...prev, char];
       }
-    })
-  }
+    });
+  };
 
   const startCustomGame = () => {
     if (selectedCharacters.length > 0) {
-      setEliminatedIds(new Set())
-      setCurrentScreen('game')
+      startGameWithCharacters(selectedCharacters);
     }
-  }
+  };
 
   // ==========================================================================
   // Screen: Game Board
   // ==========================================================================
 
   const handleCardTap = (charId) => {
-    setEliminatedIds(prev => {
-      const newSet = new Set(prev)
+    setEliminatedIds((prev) => {
+      const newSet = new Set(prev);
       if (newSet.has(charId)) {
-        newSet.delete(charId)
+        newSet.delete(charId);
       } else {
-        newSet.add(charId)
+        newSet.add(charId);
       }
-      
-      // Confetti wenn nur noch 1 Person übrig ist
-      const remaining = selectedCharacters.filter(c => !newSet.has(c.id)).length
-      if (remaining === 1) {
-        triggerConfetti()
-      }
-      
-      return newSet
-    })
-  }
+      return newSet;
+    });
+  };
 
   const handleCardLongPressStart = (char) => {
     const timer = setTimeout(() => {
-      setSelectedCharacterInfo(char)
-    }, 500) // 500ms für Long Press
-    setLongPressTimer(timer)
-  }
+      setSelectedCharacterInfo(char);
+    }, 500); // 500ms für Long Press
+    setLongPressTimer(timer);
+  };
 
   const handleCardLongPressEnd = () => {
     if (longPressTimer) {
-      clearTimeout(longPressTimer)
-      setLongPressTimer(null)
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
     }
-  }
+  };
 
   const handleInfoClick = (char) => {
-    setSelectedCharacterInfo(char)
-  }
+    setSelectedCharacterInfo(char);
+  };
 
   const resetGame = () => {
-    setEliminatedIds(new Set())
-  }
+    setEliminatedIds(new Set());
+    setGameSeconds(0);
+    setWinnerCharacter(null);
+  };
 
-  const remainingCount = selectedCharacters.filter(c => !eliminatedIds.has(c.id)).length
+  const remainingCount = selectedCharacters.filter(
+    (c) => !eliminatedIds.has(c.id)
+  ).length;
 
   // ==========================================================================
   // Rendering
   // ==========================================================================
 
-  if (currentScreen === 'start') {
+  if (currentScreen === "welcome") {
     return (
-      <div className="min-h-screen pb-8">
+      <div className="min-h-screen bg-slate-950 text-white flex flex-col">
+        <div className="flex-1 flex flex-col items-center justify-center px-6 pb-10 pt-16 max-w-xl mx-auto text-center">
+          <div className="mb-6 fade-in-up" style={{ animationDelay: "0ms" }}>
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-slate-900/70 backdrop-blur-md shadow-xl mb-4 border border-slate-700">
+              <span className="text-4xl">🕵️‍♂️</span>
+            </div>
+            <h1 className="text-4xl font-extrabold leading-tight mb-2">
+              GUESS WHO
+            </h1>
+            <p className="text-lg opacity-90 font-medium">Freunde Edition</p>
+          </div>
+
+          <div className="w-full space-y-3 mt-6">
+            <div
+              className="glass-effect bg-white/95 rounded-2xl p-4 text-left fade-in-up border border-gray-200 shadow-lg"
+              style={{ animationDelay: "80ms" }}
+            >
+              <p className="text-sm font-semibold uppercase tracking-wide mb-1 text-gray-900">
+                So geht&apos;s 🎯
+              </p>
+              <p className="text-sm text-gray-700">
+                Eine Person denkt sich jemanden aus der Gruppe aus. Die andere
+                Person stellt Ja/Nein-Fragen und tippt Karten weg, die nicht
+                passen.
+              </p>
+            </div>
+
+            <div
+              className="glass-effect bg-white/95 rounded-2xl p-4 text-left fade-in-up border border-gray-200 shadow-lg"
+              style={{ animationDelay: "140ms" }}
+            >
+              <p className="text-sm font-semibold uppercase tracking-wide mb-1 text-gray-900">
+                Deine Moves 👇
+              </p>
+              <ul className="text-sm space-y-1 text-gray-700">
+                <li>• Tippe auf eine Karte, um die Person auszuschließen.</li>
+                <li>
+                  • Halte gedrückt oder tippe auf das Info-Icon für Details.
+                </li>
+                <li>
+                  • Wenn nur noch eine Person übrig bleibt, löst das Spiel auf.
+                </li>
+              </ul>
+            </div>
+
+            <div
+              className="glass-effect bg-white/95 rounded-2xl p-4 text-left fade-in-up border border-gray-200 shadow-lg"
+              style={{ animationDelay: "200ms" }}
+            >
+              <p className="text-sm font-semibold uppercase tracking-wide mb-1 text-gray-900">
+                Tipp 💡
+              </p>
+              <p className="text-sm text-gray-700">
+                Spielt auf Zeit und schaut im Timer, wer die gesuchte Person am
+                schnellsten findet.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="px-6 pb-6 pt-2">
+          <button
+            onClick={() => setCurrentScreen("start")}
+            className="touch-target w-full card-transition rounded-2xl p-4 font-bold text-lg shadow-xl bg-amber-400 text-slate-950 active:card-active"
+          >
+            Los geht&apos;s 🚀
+          </button>
+          <button
+            onClick={() => setCurrentScreen("start")}
+            className="mt-3 w-full text-sm opacity-80 underline-offset-2 hover:underline"
+          ></button>
+        </div>
+      </div>
+    );
+  }
+
+  if (currentScreen === "start") {
+    return (
+      <div className="min-h-screen pb-8 bg-off-white">
         {/* Header/Hero */}
-        <div className="bg-gradient-to-br from-coral via-violet to-teal text-white pt-12 pb-16 px-4 rounded-b-3xl shadow-lg">
+        <div className="bg-slate-950 text-white pt-12 pb-16 px-4 rounded-b-3xl shadow-lg">
           <div className="max-w-2xl mx-auto text-center">
             <div className="inline-block p-4 bg-white/20 rounded-full mb-4 backdrop-blur-sm">
               <Users className="w-12 h-12" />
             </div>
-            <h1 className="text-4xl font-bold mb-2">Wer ist es?</h1>
+            <h1 className="text-4xl font-bold mb-2">GUESS WHO</h1>
             <p className="text-xl opacity-90">Freunde Edition</p>
           </div>
         </div>
 
         {/* Kategorie-Auswahl */}
         <div className="max-w-2xl mx-auto px-4 mt-8">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Wähle eine Gruppe</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">
+            Wähle eine Gruppe
+          </h2>
           <div className="grid grid-cols-1 gap-4 mb-8">
-            {Object.entries(categories).map(([categoryName, chars]) => (
+            {Object.entries(categories).map(([categoryName, chars], index) => (
               <button
                 key={categoryName}
                 onClick={() => handleCategorySelect(categoryName)}
-                className="touch-target card-transition bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl active:card-active text-left group"
+                className="touch-target card-transition bg-white rounded-2xl p-6 shadow-lg active:card-active text-left group fade-in-up border border-slate-200"
+                style={{ animationDelay: `${index * 60}ms` }}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-1">{categoryName}</h3>
+                    <h3 className="text-xl font-bold text-gray-800 mb-1">
+                      {categoryName}
+                    </h3>
                     <p className="text-gray-600">{chars.length} Personen</p>
                   </div>
-                  <div className="text-3xl opacity-0 group-active:opacity-100 transition-opacity">
+                  <div className="text-3xl text-slate-400 group-active:text-slate-600 transition-colors">
                     →
                   </div>
                 </div>
@@ -373,64 +508,143 @@ function App() {
           {/* Custom Mode Button */}
           <button
             onClick={handleCustomMode}
-            className="touch-target w-full card-transition bg-gradient-to-r from-coral to-violet text-white rounded-2xl p-6 shadow-lg hover:shadow-xl active:card-active font-bold text-lg"
+            className="touch-target w-full card-transition bg-slate-900 text-white rounded-2xl p-6 shadow-lg hover:shadow-xl active:card-active font-bold text-lg"
           >
             Custom Mode
           </button>
         </div>
+
+        {/* Gruppen-Vorschau Overlay */}
+        {previewCategoryName && (
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-40"
+            onClick={() => {
+              setPreviewCategoryName(null);
+              setPreviewCategoryChars([]);
+            }}
+          >
+            <div
+              className="glass-effect rounded-2xl p-6 max-w-lg w-full shadow-2xl max-h-[80vh] flex flex-col bg-white/95 border border-gray-100 text-gray-900"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-amber-600 mb-1">
+                    Gruppe
+                  </p>
+                  <h3 className="text-2xl font-bold text-gray-900">
+                    {previewCategoryName}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {previewCategoryChars.length}{" "}
+                    {previewCategoryChars.length === 1 ? "Person" : "Personen"}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setPreviewCategoryName(null);
+                    setPreviewCategoryChars([]);
+                  }}
+                  className="touch-target rounded-full p-2 hover:bg-gray-100 active:card-active transition-all"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 overflow-y-auto pr-1 mb-4">
+                {previewCategoryChars.map((char, index) => (
+                  <div
+                    key={char.id}
+                    className="rounded-xl bg-gray-50 border border-gray-200 shadow-sm p-2 fade-in-up"
+                    style={{ animationDelay: `${index * 40}ms` }}
+                  >
+                    <div className="aspect-square rounded-lg overflow-hidden mb-1">
+                      <img
+                        src={char.image}
+                        alt={char.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p className="text-xs font-semibold text-center text-gray-900 truncate">
+                      {char.name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => {
+                  startGameWithCharacters(previewCategoryChars);
+                  setPreviewCategoryName(null);
+                  setPreviewCategoryChars([]);
+                }}
+                className="touch-target w-full card-transition rounded-2xl p-3 font-bold text-lg shadow-lg active:card-active bg-amber-400 text-slate-950 mt-auto"
+              >
+                Spiel starten
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-    )
+    );
   }
 
-  if (currentScreen === 'custom') {
+  if (currentScreen === "custom") {
     return (
-      <div className="min-h-screen pb-24">
+      <div className="min-h-screen pb-24 bg-off-white">
         {/* Header */}
-        <div className="bg-gradient-to-r from-teal to-violet text-white pt-12 pb-8 px-4 rounded-b-3xl shadow-lg">
+        <div className="bg-slate-950 text-white pt-12 pb-8 px-4 rounded-b-3xl shadow-lg">
           <div className="max-w-2xl mx-auto">
             <button
-              onClick={() => setCurrentScreen('start')}
+              onClick={() => setCurrentScreen("start")}
               className="touch-target inline-flex items-center gap-2 mb-4 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 hover:bg-white/30 active:card-active transition-all"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Zurück</span>
             </button>
             <h2 className="text-3xl font-bold">Wähle Personen</h2>
-            <p className="text-lg opacity-90 mt-2">Tippe auf Personen, um sie auszuwählen</p>
+            <p className="text-lg opacity-90 mt-2">
+              Tippe auf Personen, um sie auszuwählen
+            </p>
           </div>
         </div>
 
         {/* Charakter-Liste */}
         <div className="max-w-2xl mx-auto px-4 mt-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {INITIAL_DATA.map(char => {
-              const isSelected = selectedCharacters.some(c => c.id === char.id)
+            {INITIAL_DATA.map((char, index) => {
+              const isSelected = selectedCharacters.some(
+                (c) => c.id === char.id
+              );
               return (
                 <button
                   key={char.id}
                   onClick={() => toggleCharacterSelection(char)}
-                  className={`touch-target card-transition rounded-2xl p-3 shadow-md active:card-active ${
-                    isSelected 
-                      ? 'bg-gradient-to-br from-coral to-violet ring-4 ring-teal' 
-                      : 'bg-white'
+                  className={`touch-target card-transition rounded-2xl p-3 shadow-md active:card-active fade-in-up ${
+                    isSelected
+                      ? "bg-slate-900 ring-4 ring-amber-400"
+                      : "bg-white"
                   }`}
+                  style={{ animationDelay: `${index * 30}ms` }}
                 >
                   <div className="aspect-square rounded-xl overflow-hidden mb-2">
                     <img
                       src={char.image}
                       alt={char.name}
                       className={`w-full h-full object-cover ${
-                        isSelected ? '' : 'grayscale opacity-60'
+                        isSelected ? "" : "grayscale opacity-60"
                       }`}
                     />
                   </div>
-                  <p className={`text-sm font-semibold text-center ${
-                    isSelected ? 'text-white' : 'text-gray-700'
-                  }`}>
+                  <p
+                    className={`text-sm font-semibold text-center ${
+                      isSelected ? "text-white" : "text-gray-700"
+                    }`}
+                  >
                     {char.name}
                   </p>
                 </button>
-              )
+              );
             })}
           </div>
         </div>
@@ -443,27 +657,28 @@ function App() {
               disabled={selectedCharacters.length === 0}
               className={`touch-target w-full card-transition rounded-2xl p-4 font-bold text-lg shadow-lg active:card-active ${
                 selectedCharacters.length > 0
-                  ? 'bg-gradient-to-r from-coral to-violet text-white'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  ? "bg-amber-400 text-slate-950"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }`}
             >
-              Spiel starten mit {selectedCharacters.length} {selectedCharacters.length === 1 ? 'Person' : 'Personen'}
+              Spiel starten mit {selectedCharacters.length}{" "}
+              {selectedCharacters.length === 1 ? "Person" : "Personen"}
             </button>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  if (currentScreen === 'game') {
+  if (currentScreen === "game") {
     return (
-      <div className="min-h-screen pb-24">
+      <div className="min-h-screen pb-24 bg-off-white">
         {/* Header mit Controls */}
-        <div className="bg-gradient-to-r from-violet to-coral text-white pt-12 pb-8 px-4 rounded-b-3xl shadow-lg">
+        <div className="bg-slate-950 text-white pt-12 pb-8 px-4 rounded-b-3xl shadow-lg">
           <div className="max-w-2xl mx-auto">
             <div className="flex items-center justify-between mb-4">
               <button
-                onClick={() => setCurrentScreen('start')}
+                onClick={() => setCurrentScreen("start")}
                 className="touch-target inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 hover:bg-white/30 active:card-active transition-all"
               >
                 <ArrowLeft className="w-5 h-5" />
@@ -477,10 +692,18 @@ function App() {
                 <span>Reset</span>
               </button>
             </div>
-            <h2 className="text-3xl font-bold mb-2">Wer ist es?</h2>
-            <div className="flex items-center gap-2 text-lg">
-              <Sparkles className="w-5 h-5" />
-              <span>Verbleibend: <strong>{remainingCount}</strong></span>
+            <h2 className="text-3xl font-bold mb-1">Wer ist es?</h2>
+            <div className="flex flex-wrap items-center gap-4 text-lg mt-2">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5" />
+                <span>
+                  Verbleibend: <strong>{remainingCount}</strong>
+                </span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1 text-sm">
+                <span className="font-medium">Zeit:</span>
+                <span className="tabular-nums">{formatTime(gameSeconds)}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -488,14 +711,15 @@ function App() {
         {/* Game Board Grid */}
         <div className="max-w-2xl mx-auto px-4 mt-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {selectedCharacters.map(char => {
-              const isEliminated = eliminatedIds.has(char.id)
+            {selectedCharacters.map((char, index) => {
+              const isEliminated = eliminatedIds.has(char.id);
               return (
                 <div
                   key={char.id}
-                  className={`touch-target card-transition relative rounded-2xl overflow-hidden shadow-lg active:card-active ${
-                    isEliminated ? 'opacity-50' : ''
+                  className={`touch-target card-transition relative rounded-2xl overflow-hidden shadow-lg active:card-active fade-in-up ${
+                    isEliminated ? "opacity-40" : ""
                   }`}
+                  style={{ animationDelay: `${index * 50}ms` }}
                   onClick={() => handleCardTap(char.id)}
                   onTouchStart={() => handleCardLongPressStart(char)}
                   onTouchEnd={handleCardLongPressEnd}
@@ -509,7 +733,7 @@ function App() {
                       src={char.image}
                       alt={char.name}
                       className={`w-full h-full object-cover transition-all ${
-                        isEliminated ? 'grayscale' : ''
+                        isEliminated ? "grayscale" : ""
                       }`}
                     />
                     {isEliminated && (
@@ -521,45 +745,49 @@ function App() {
 
                   {/* Name */}
                   <div className="bg-white p-3">
-                    <p className="text-center font-semibold text-gray-800">{char.name}</p>
+                    <p className="text-center font-semibold text-gray-800">
+                      {char.name}
+                    </p>
                   </div>
 
                   {/* Info Button */}
                   <button
                     onClick={(e) => {
-                      e.stopPropagation()
-                      handleInfoClick(char)
+                      e.stopPropagation();
+                      handleInfoClick(char);
                     }}
-                    className="absolute top-2 right-2 touch-target bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white active:card-active transition-all"
+                    className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white active:card-active transition-all flex items-center justify-center"
                   >
                     <Info className="w-4 h-4 text-gray-700" />
                   </button>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
 
         {/* Character Info Modal */}
-        {selectedCharacterInfo && (
+        {selectedCharacterInfo && !winnerCharacter && (
           <div
             className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
             onClick={() => setSelectedCharacterInfo(null)}
           >
             <div
-              className="glass-effect rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+              className="glass-effect rounded-2xl p-6 max-w-sm w-full shadow-2xl bg-white/95 border border-gray-100 text-gray-900 info-pop"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-2xl font-bold text-gray-800">{selectedCharacterInfo.name}</h3>
+                <h3 className="text-2xl font-bold text-gray-900">
+                  {selectedCharacterInfo.name}
+                </h3>
                 <button
                   onClick={() => setSelectedCharacterInfo(null)}
-                  className="touch-target rounded-full p-2 hover:bg-gray-200 active:card-active transition-all"
+                  className="touch-target rounded-full p-2 hover:bg-gray-100 active:card-active transition-all"
                 >
-                  <X className="w-5 h-5 text-gray-700" />
+                  <X className="w-5 h-5 text-gray-500" />
                 </button>
               </div>
-              
+
               <div className="aspect-square rounded-xl overflow-hidden mb-4">
                 <img
                   src={selectedCharacterInfo.image}
@@ -569,11 +797,13 @@ function App() {
               </div>
 
               <div>
-                <h4 className="font-semibold text-gray-700 mb-2">Eigenschaften:</h4>
+                <h4 className="font-semibold text-gray-700 mb-2">
+                  Eigenschaften:
+                </h4>
                 <ul className="space-y-2">
                   {selectedCharacterInfo.traits.map((trait, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="text-coral mt-1">•</span>
+                      <span className="text-amber-500 mt-1">•</span>
                       <span className="text-gray-700">{trait}</span>
                     </li>
                   ))}
@@ -587,7 +817,7 @@ function App() {
                     {selectedCharacterInfo.category.map((cat, idx) => (
                       <span
                         key={idx}
-                        className="px-3 py-1 bg-gradient-to-r from-teal to-violet text-white rounded-full text-sm"
+                        className="px-3 py-1 rounded-full text-sm bg-gray-100 border border-gray-200 text-gray-800"
                       >
                         {cat}
                       </span>
@@ -598,12 +828,51 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Gewinner Overlay */}
+        {winnerCharacter && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="glass-effect rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center bg-white/95 border border-gray-100 text-gray-900">
+              <p className="text-xs uppercase tracking-[0.2em] text-amber-600 mb-2">
+                Auflösung
+              </p>
+              <h3 className="text-3xl font-extrabold text-gray-900 mb-3">
+                Es muss {winnerCharacter.name} sein!
+              </h3>
+              <div className="aspect-square rounded-2xl overflow-hidden mb-4 shadow-lg fade-in-up">
+                <img
+                  src={winnerCharacter.image}
+                  alt={winnerCharacter.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-sm text-gray-500 mb-4">
+                Du hast alle anderen ausgeschlossen – diese Person bleibt übrig.
+              </p>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => setWinnerCharacter(null)}
+                  className="touch-target w-full card-transition rounded-2xl p-3 font-semibold bg-amber-400 text-slate-950 active:card-active"
+                >
+                  Weiter spielen
+                </button>
+                <button
+                  onClick={() => {
+                    resetGame();
+                  }}
+                  className="touch-target w-full card-transition rounded-2xl p-3 font-semibold bg-gray-100 text-gray-800 border border-gray-200 active:card-active"
+                >
+                  Neues Spiel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    )
+    );
   }
 
-  return null
+  return null;
 }
 
-export default App
-
+export default App;
