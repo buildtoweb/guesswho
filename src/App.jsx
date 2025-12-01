@@ -232,8 +232,8 @@ function App() {
               </p>
               <p className="text-sm text-gray-700">
                 Eine Person denkt sich jemanden aus der Gruppe aus. Die andere
-                Person stellt Ja/Nein-Fragen und tippt Karten weg, die nicht
-                passen.
+                Person stellt Ja/Nein-Fragen zum Charakter (nicht zum Aussehen)
+                und tippt Karten weg, die nicht passen.
               </p>
             </div>
 
@@ -245,27 +245,16 @@ function App() {
                 Deine Moves 👇
               </p>
               <ul className="text-sm space-y-1 text-gray-700">
-                <li>• Tippe auf eine Karte, um die Person auszuschließen.</li>
+                <li>• Wähle eine Gruppe oder Custom Mode</li>
+                <li>• Tippe auf eine Karte, um die Person auszuschließen</li>
                 <li>
-                  • Halte gedrückt oder tippe auf das Info-Icon für Details.
+                  • Halte gedrückt oder tippe auf das Info-Icon für persönliche
+                  Details, falls du die Person nicht kennst
                 </li>
                 <li>
-                  • Wenn nur noch eine Person übrig bleibt, löst das Spiel auf.
+                  • Wenn nur noch eine Person übrig bleibt, löst das Spiel auf
                 </li>
               </ul>
-            </div>
-
-            <div
-              className="glass-effect bg-white/95 rounded-2xl p-4 text-left fade-in-up border border-gray-200 shadow-lg"
-              style={{ animationDelay: "200ms" }}
-            >
-              <p className="text-sm font-semibold uppercase tracking-wide mb-1 text-gray-900">
-                Tipp 💡
-              </p>
-              <p className="text-sm text-gray-700">
-                Spielt auf Zeit und schaut im Timer, wer die gesuchte Person am
-                schnellsten findet.
-              </p>
             </div>
           </div>
         </div>
@@ -280,7 +269,9 @@ function App() {
           <button
             onClick={() => setCurrentScreen("start")}
             className="mt-3 w-full text-sm opacity-80 underline-offset-2 hover:underline"
-          ></button>
+          >
+            Idee by Mira, Code by Adi
+          </button>
         </div>
       </div>
     );
@@ -684,10 +675,14 @@ function App() {
               </p>
               <div className="flex flex-col gap-2">
                 <button
-                  onClick={() => setWinnerCharacter(null)}
+                  onClick={() => {
+                    resetGame();
+                    setSelectedCharacters([]);
+                    setCurrentScreen("start");
+                  }}
                   className="touch-target w-full card-transition rounded-2xl p-3 font-semibold bg-amber-400 text-slate-950 active:card-active"
                 >
-                  Weiter spielen
+                  Zurück zur Gruppenauswahl
                 </button>
                 <button
                   onClick={() => {
