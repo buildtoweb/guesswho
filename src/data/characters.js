@@ -68,14 +68,16 @@ export const INITIAL_DATA = [
   {
     id: 10,
     name: "Timo",
-    image: "/guesswho/images/E61B867C-85C6-4E0E-AAFB-75216EEC4410_4_5005_c.jpeg",
+    image:
+      "/guesswho/images/E61B867C-85C6-4E0E-AAFB-75216EEC4410_4_5005_c.jpeg",
     category: ["Alle"],
     traits: ["Fußballer", "Motivator", "Biedermannsdorf Hood"],
   },
   {
     id: 11,
     name: "Denise",
-    image: "/guesswho/images/E2065DB6-7B8F-45EF-9606-61871CEE6E6D_4_5005_c.jpeg",
+    image:
+      "/guesswho/images/E2065DB6-7B8F-45EF-9606-61871CEE6E6D_4_5005_c.jpeg",
     category: ["Alle"],
     traits: ["Kindergärtnerin", "Hat einen Freund"],
   },
@@ -92,6 +94,20 @@ export const INITIAL_DATA = [
     image: "/guesswho/images/DB4F7887-575A-4B63-A3F4-C009C2016B8F_1_201_a.jpeg",
     category: ["Alle"],
     traits: ["Skilehrerin", "Geflüchtet aus Wien"],
+  },
+  {
+    id: 14,
+    name: "Patrick",
+    image: "guesswho/images/patrick.png",
+    category: ["Alle"],
+    traits: ["Student", "Bart", "Der Mann"],
+  },
+  {
+    id: 15,
+    name: "Maxi",
+    image: "guesswho/images/maxi.jpg",
+    category: ["Alle"],
+    traits: ["Bundesheer", "Kartoffel Schälen"],
   },
 ];
 
