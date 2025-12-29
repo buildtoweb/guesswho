@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Users, X, RotateCcw, ArrowLeft, Info, Sparkles } from "lucide-react";
+import { Users, X, RotateCcw, ArrowLeft, Info, Sparkles, Target } from "lucide-react";
 import { INITIAL_DATA, getCategories } from "./data/characters";
 
 // ============================================================================
@@ -70,6 +70,8 @@ function App() {
   const [previewCategoryChars, setPreviewCategoryChars] = useState([]);
   const [gameSeconds, setGameSeconds] = useState(0);
   const [winnerCharacter, setWinnerCharacter] = useState(null);
+  const [myCharacter, setMyCharacter] = useState(null);
+  const [showSelectButton, setShowSelectButton] = useState(true);
 
   const categories = useMemo(() => getCategories(), []);
 
@@ -118,6 +120,8 @@ function App() {
     setSelectedCharacters(chars);
     setEliminatedIds(new Set());
     setWinnerCharacter(null);
+    setMyCharacter(null);
+    setShowSelectButton(true);
     setCurrentScreen("game");
   };
 
@@ -198,6 +202,15 @@ function App() {
     setEliminatedIds(new Set());
     setGameSeconds(0);
     setWinnerCharacter(null);
+    setMyCharacter(null);
+    setShowSelectButton(true);
+  };
+
+  const selectRandomCharacter = () => {
+    if (selectedCharacters.length > 0 && !myCharacter) {
+      const randomIndex = Math.floor(Math.random() * selectedCharacters.length);
+      setMyCharacter(selectedCharacters[randomIndex]);
+    }
   };
 
   const remainingCount = selectedCharacters.filter(
@@ -517,6 +530,13 @@ function App() {
               </button>
             </div>
             <h2 className="text-3xl font-bold mb-1">Wer ist es?</h2>
+            {myCharacter && (
+              <div className="mt-3 mb-2 bg-amber-400/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-amber-400/30">
+                <p className="text-sm font-semibold text-amber-300">
+                  Du bist: <span className="text-amber-200">{myCharacter.name}</span>
+                </p>
+              </div>
+            )}
             <div className="flex flex-wrap items-center gap-4 text-lg mt-2">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5" />
@@ -529,6 +549,24 @@ function App() {
                 <span className="tabular-nums">{formatTime(gameSeconds)}</span>
               </div>
             </div>
+            {!myCharacter && showSelectButton && (
+              <div className="mt-4 relative">
+                <button
+                  onClick={selectRandomCharacter}
+                  className="touch-target w-full card-transition rounded-2xl p-3 font-semibold text-base shadow-lg active:card-active bg-amber-400 text-slate-950 flex items-center justify-center gap-2"
+                >
+                  <Target className="w-5 h-5" />
+                  <span>Zufällige Person auswählen</span>
+                </button>
+                <button
+                  onClick={() => setShowSelectButton(false)}
+                  className="absolute top-1/2 -translate-y-1/2 right-2 touch-target rounded-full p-1.5 hover:bg-slate-950/20 active:card-active transition-all"
+                  title="Button ausblenden"
+                >
+                  <X className="w-4 h-4 text-slate-950" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
