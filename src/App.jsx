@@ -1,5 +1,13 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Users, X, RotateCcw, ArrowLeft, Info, Sparkles, Target } from "lucide-react";
+import {
+  Users,
+  X,
+  RotateCcw,
+  ArrowLeft,
+  Info,
+  Sparkles,
+  Target,
+} from "lucide-react";
 import { INITIAL_DATA, getCategories } from "./data/characters";
 
 // ============================================================================
@@ -232,7 +240,10 @@ function App() {
             <h1 className="text-4xl font-extrabold leading-tight mb-2">
               GUESS WHO
             </h1>
-            <p className="text-lg opacity-90 font-medium">Freunde Edition</p>
+            <p className="text-lg opacity-90 font-medium">
+              Freunde Edition - für die Gruppe <br /> <s>Aussehen</s>{" "}
+              Persönlichkeit
+            </p>
           </div>
 
           <div className="w-full space-y-3 mt-6">
@@ -244,9 +255,16 @@ function App() {
                 So geht&apos;s 🎯
               </p>
               <p className="text-sm text-gray-700">
-                Eine Person denkt sich jemanden aus der Gruppe aus. Die andere
-                Person stellt Ja/Nein-Fragen zum Charakter (nicht zum Aussehen)
-                und tippt Karten weg, die nicht passen.
+                <b>In der Gruppe:</b> Ein Spieler bekommt einen Charakter
+                zugewiesen. Die anderen Spieler aus der Gruppe stellen
+                Ja/Nein-Fragen zu Persönlichkeitsmerkmalen (nicht zum Aussehen)
+                und tippen Karten weg, die nicht passen.
+              </p>
+              <p className="text-sm text-gray-700">
+                <b>Zu zweit:</b> Beide Spieler bekommen einen Charakter
+                zugewiesen. Abwechselnd stellen beide Spieler Ja/Nein-Fragen zu
+                Persönlichkeitsmerkmalen und tippen Karten weg, die nicht
+                passen.
               </p>
             </div>
 
@@ -259,13 +277,17 @@ function App() {
               </p>
               <ul className="text-sm space-y-1 text-gray-700">
                 <li>• Wähle eine Gruppe oder Custom Mode</li>
-                <li>• Tippe auf eine Karte, um die Person auszuschließen</li>
+                <li>• Tippe auf "Zufällige Person auswählen"</li>
                 <li>
-                  • Halte gedrückt oder tippe auf das Info-Icon für persönliche
-                  Details, falls du die Person nicht kennst
+                  • Stelle eine Frage und tippe auf eine Karte, um einen
+                  Charakter auszuschließen
                 </li>
                 <li>
-                  • Wenn nur noch eine Person übrig bleibt, löst das Spiel auf
+                  • Halte gedrückt oder tippe auf das Info-Icon für persönliche
+                  Details, falls du den Charakter nicht kennst
+                </li>
+                <li>
+                  • Wenn nur noch ein Charakter übrig bleibt, löst das Spiel auf
                 </li>
               </ul>
             </div>
@@ -279,12 +301,10 @@ function App() {
           >
             Los geht&apos;s 🚀
           </button>
-          <button
-            onClick={() => setCurrentScreen("start")}
-            className="mt-3 w-full text-sm opacity-80 underline-offset-2 hover:underline"
-          >
-            Idee by Mira, Code by Adi
-          </button>
+        </div>
+
+        <div className="pb-4 text-center">
+          <p className="text-s text-white/40">Idee by Mira, Code by Adi</p>
         </div>
       </div>
     );
@@ -295,12 +315,24 @@ function App() {
       <div className="min-h-screen pb-8 bg-off-white">
         {/* Header/Hero */}
         <div className="bg-slate-950 text-white pt-12 pb-16 px-4 rounded-b-3xl shadow-lg">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="inline-block p-4 bg-white/20 rounded-full mb-4 backdrop-blur-sm">
-              <Users className="w-12 h-12" />
+          <div className="max-w-2xl mx-auto">
+            <button
+              onClick={() => setCurrentScreen("welcome")}
+              className="touch-target inline-flex items-center gap-2 mb-4 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 hover:bg-white/30 active:card-active transition-all"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Regeln anzeigen</span>
+            </button>
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-slate-900/70 backdrop-blur-md shadow-xl mb-4 border border-slate-700">
+                <span className="text-4xl">🤯</span>
+              </div>
+              <h1 className="text-4xl font-bold mb-2">GUESS WHO nur für uns</h1>
+              <p className="text-xl opacity-90">
+                Willkommen beim Spiel! <br /> Wähle deine Gruppe oder einzelne
+                Charaktere
+              </p>
             </div>
-            <h1 className="text-4xl font-bold mb-2">GUESS WHO</h1>
-            <p className="text-xl opacity-90">Freunde Edition</p>
           </div>
         </div>
 
@@ -533,7 +565,8 @@ function App() {
             {myCharacter && (
               <div className="mt-3 mb-2 bg-amber-400/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-amber-400/30">
                 <p className="text-sm font-semibold text-amber-300">
-                  Du bist: <span className="text-amber-200">{myCharacter.name}</span>
+                  Du bist:{" "}
+                  <span className="text-amber-200">{myCharacter.name}</span>
                 </p>
               </div>
             )}
