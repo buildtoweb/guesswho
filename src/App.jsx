@@ -67,21 +67,52 @@ const formatTime = (seconds) => {
 // Haupt-App-Komponente
 // ============================================================================
 
+// Hilfsfunktion: Lädt eigene Spieler aus localStorage
+const loadCustomPlayers = () => {
+  try {
+    const stored = localStorage.getItem("customPlayers");
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+};
+
+// Hilfsfunktion: Speichert eigene Spieler in localStorage
+const saveCustomPlayers = (players) => {
+  try {
+    localStorage.setItem("customPlayers", JSON.stringify(players));
+  } catch (error) {
+    console.error("Fehler beim Speichern:", error);
+  }
+};
+
+// Hilfsfunktion: Zufälliges Avatar auswählen
+const getRandomAvatar = () => {
+  const avatarNumber = Math.floor(Math.random() * 10) + 1;
+  return `/images/avatars/${String(avatarNumber).padStart(2, "0")}.jpg`;
+};
+
 function App() {
-  // Screen States: 'welcome' | 'start' | 'custom' | 'game'
+  // Screen States: 'welcome' | 'start' | 'custom' | 'customPlayers' | 'game'
   const [currentScreen, setCurrentScreen] = useState("welcome");
   const [selectedCharacters, setSelectedCharacters] = useState([]);
   const [eliminatedIds, setEliminatedIds] = useState(new Set());
   const [selectedCharacterInfo, setSelectedCharacterInfo] = useState(null);
-  const [longPressTimer, setLongPressTimer] = useState(null);
   const [previewCategoryName, setPreviewCategoryName] = useState(null);
   const [previewCategoryChars, setPreviewCategoryChars] = useState([]);
   const [gameSeconds, setGameSeconds] = useState(0);
   const [winnerCharacter, setWinnerCharacter] = useState(null);
   const [myCharacter, setMyCharacter] = useState(null);
   const [showSelectButton, setShowSelectButton] = useState(true);
+  const [customPlayers, setCustomPlayers] = useState(loadCustomPlayers);
+  const [newPlayerName, setNewPlayerName] = useState("");
 
   const categories = useMemo(() => getCategories(), []);
+
+  // Lade eigene Spieler beim Start
+  useEffect(() => {
+    setCustomPlayers(loadCustomPlayers());
+  }, []);
 
   // Timer: läuft nur im Game-Screen
   useEffect(() => {
@@ -151,6 +182,14 @@ function App() {
     setCurrentScreen("custom");
   };
 
+  const handleCustomPlayersMode = () => {
+    setSelectedCharacters([]);
+    setEliminatedIds(new Set());
+    setPreviewCategoryName(null);
+    setPreviewCategoryChars([]);
+    setCurrentScreen("customPlayers");
+  };
+
   // ==========================================================================
   // Screen: Custom Mode (Auswahl)
   // ==========================================================================
@@ -186,20 +225,6 @@ function App() {
       }
       return newSet;
     });
-  };
-
-  const handleCardLongPressStart = (char) => {
-    const timer = setTimeout(() => {
-      setSelectedCharacterInfo(char);
-    }, 500); // 500ms für Long Press
-    setLongPressTimer(timer);
-  };
-
-  const handleCardLongPressEnd = () => {
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
-    }
   };
 
   const handleInfoClick = (char) => {
@@ -283,8 +308,8 @@ function App() {
                   Charakter auszuschließen
                 </li>
                 <li>
-                  • Halte gedrückt oder tippe auf das Info-Icon für persönliche
-                  Details, falls du den Charakter nicht kennst
+                  • Tippe auf das Info-Icon für persönliche Details, falls du
+                  den Charakter nicht kennst
                 </li>
                 <li>
                   • Wenn nur noch ein Charakter übrig bleibt, löst das Spiel auf
@@ -373,6 +398,24 @@ function App() {
                   <h3 className="text-xl font-bold mb-1">Custom Mode</h3>
                   <p className="text-sm text-slate-200">
                     Wähle frei, mit welchen Personen ihr spielt.
+                  </p>
+                </div>
+                <div className="text-3xl text-slate-400 group-active:text-slate-100 transition-colors">
+                  →
+                </div>
+              </div>
+            </button>
+
+            {/* Custom Players Mode Card */}
+            <button
+              onClick={handleCustomPlayersMode}
+              className="touch-target card-transition rounded-2xl p-6 shadow-lg active:card-active text-left group bg-slate-900 text-white"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold mb-1">Eigene Spieler</h3>
+                  <p className="text-sm text-slate-200">
+                    Erstelle eigene Spieler mit zufälligen Avataren.
                   </p>
                 </div>
                 <div className="text-3xl text-slate-400 group-active:text-slate-100 transition-colors">
@@ -539,6 +582,208 @@ function App() {
     );
   }
 
+  if (currentScreen === "customPlayers") {
+    // Funktionen für eigene Spieler
+    const addCustomPlayer = () => {
+      if (newPlayerName.trim()) {
+        const newPlayer = {
+          id: Date.now(),
+          name: newPlayerName.trim(),
+          image: getRandomAvatar(),
+        };
+        const updated = [...customPlayers, newPlayer];
+        setCustomPlayers(updated);
+        saveCustomPlayers(updated);
+
+        // Automatisch auswählen
+        const char = {
+          id: `custom-${newPlayer.id}`,
+          name: newPlayer.name,
+          image: newPlayer.image,
+          category: ["Eigene Spieler"],
+          traits: [],
+        };
+        setSelectedCharacters((prev) => {
+          // Prüfen, ob bereits ausgewählt (sollte nicht der Fall sein)
+          if (prev.some((c) => c.id === char.id)) {
+            return prev;
+          }
+          return [...prev, char];
+        });
+
+        setNewPlayerName("");
+      }
+    };
+
+    const deleteCustomPlayer = (id) => {
+      const updated = customPlayers.filter((p) => p.id !== id);
+      setCustomPlayers(updated);
+      saveCustomPlayers(updated);
+
+      // Auch aus der Auswahl entfernen
+      setSelectedCharacters((prev) =>
+        prev.filter((c) => c.id !== `custom-${id}`)
+      );
+    };
+
+    const toggleCustomPlayerSelection = (player) => {
+      // Konvertiere Spieler zu Charakter-Format für das Spiel
+      const char = {
+        id: `custom-${player.id}`,
+        name: player.name,
+        image: player.image,
+        category: ["Eigene Spieler"],
+        traits: [],
+      };
+      toggleCharacterSelection(char);
+    };
+
+    const startCustomPlayersGame = () => {
+      if (selectedCharacters.length > 0) {
+        startGameWithCharacters(selectedCharacters);
+      }
+    };
+
+    return (
+      <div className="min-h-screen pb-24 bg-off-white">
+        {/* Header */}
+        <div className="bg-slate-950 text-white pt-12 pb-8 px-4 rounded-b-3xl shadow-lg">
+          <div className="max-w-2xl mx-auto">
+            <button
+              onClick={() => setCurrentScreen("start")}
+              className="touch-target inline-flex items-center gap-2 mb-4 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 hover:bg-white/30 active:card-active transition-all"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Zurück</span>
+            </button>
+            <h2 className="text-3xl font-bold">Eigene Spieler</h2>
+            <p className="text-lg opacity-90 mt-2">
+              Erstelle und verwalte deine eigenen Spieler
+            </p>
+          </div>
+        </div>
+
+        {/* Neuen Spieler hinzufügen */}
+        <div className="max-w-2xl mx-auto px-4 mt-6">
+          <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-200 mb-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-3">
+              Neuen Spieler hinzufügen
+            </h3>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={newPlayerName}
+                onChange={(e) => setNewPlayerName(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    addCustomPlayer();
+                  }
+                }}
+                placeholder="Spielername eingeben..."
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-gray-800"
+              />
+              <button
+                onClick={addCustomPlayer}
+                disabled={!newPlayerName.trim()}
+                className={`touch-target card-transition rounded-xl px-6 py-2 font-semibold active:card-active ${
+                  newPlayerName.trim()
+                    ? "bg-slate-900 text-white"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+              >
+                Hinzufügen
+              </button>
+            </div>
+          </div>
+
+          {/* Spieler-Liste */}
+          {customPlayers.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              <p className="text-lg mb-2">Noch keine eigenen Spieler</p>
+              <p className="text-sm">
+                Füge oben einen Spieler hinzu, um zu beginnen
+              </p>
+            </div>
+          ) : (
+            <>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">
+                Deine Spieler ({customPlayers.length})
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6">
+                {customPlayers.map((player, index) => {
+                  const charId = `custom-${player.id}`;
+                  const isSelected = selectedCharacters.some(
+                    (c) => c.id === charId
+                  );
+                  return (
+                    <div
+                      key={player.id}
+                      className={`touch-target card-transition relative rounded-2xl p-3 shadow-md active:card-active fade-in-up ${
+                        isSelected
+                          ? "bg-slate-900 ring-4 ring-amber-400"
+                          : "bg-white"
+                      }`}
+                      style={{ animationDelay: `${index * 30}ms` }}
+                    >
+                      <button
+                        onClick={() => toggleCustomPlayerSelection(player)}
+                        className="w-full"
+                      >
+                        <div className="aspect-square rounded-xl overflow-hidden mb-2">
+                          <img
+                            src={player.image}
+                            alt={player.name}
+                            className={`w-full h-full object-cover ${
+                              isSelected ? "" : "grayscale opacity-60"
+                            }`}
+                          />
+                        </div>
+                        <p
+                          className={`text-sm font-semibold text-center ${
+                            isSelected ? "text-white" : "text-gray-700"
+                          }`}
+                        >
+                          {player.name}
+                        </p>
+                      </button>
+                      <button
+                        onClick={() => deleteCustomPlayer(player.id)}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 active:card-active transition-all"
+                        title="Spieler löschen"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Sticky Button */}
+        {customPlayers.length > 0 && (
+          <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-sm border-t border-gray-200 shadow-lg">
+            <div className="max-w-2xl mx-auto">
+              <button
+                onClick={startCustomPlayersGame}
+                disabled={selectedCharacters.length === 0}
+                className={`touch-target w-full card-transition rounded-2xl p-4 font-bold text-lg shadow-lg active:card-active ${
+                  selectedCharacters.length > 0
+                    ? "bg-amber-400 text-slate-950"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+              >
+                Spiel starten mit {selectedCharacters.length}{" "}
+                {selectedCharacters.length === 1 ? "Spieler" : "Spielern"}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   if (currentScreen === "game") {
     return (
       <div className="min-h-screen pb-24 bg-off-white">
@@ -616,11 +861,6 @@ function App() {
                   }`}
                   style={{ animationDelay: `${index * 50}ms` }}
                   onClick={() => handleCardTap(char.id)}
-                  onTouchStart={() => handleCardLongPressStart(char)}
-                  onTouchEnd={handleCardLongPressEnd}
-                  onMouseDown={() => handleCardLongPressStart(char)}
-                  onMouseUp={handleCardLongPressEnd}
-                  onMouseLeave={handleCardLongPressEnd}
                 >
                   {/* Bild */}
                   <div className="aspect-square relative">
